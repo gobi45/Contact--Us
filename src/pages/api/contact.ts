@@ -5,8 +5,7 @@ import nodemailer from "nodemailer";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json();
-    const { name, email, phone, organization, message } = data;
+    const { name, email, phone, organization, message } = await request.json();
 
     if (!name || !email || !message) {
       return new Response(
@@ -18,13 +17,15 @@ export const POST: APIRoute = async ({ request }) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: import.meta.env.PUBLIC_EMAIL_USER,
-        pass: import.meta.env.PUBLIC_EMAIL_PASS,
+        user: import.meta.env.EMAIL_USER,
+        pass: import.meta.env.EMAIL_PASS,
       },
     });
+
+    // Email to Admin
     await transporter.sendMail({
-      from: import.meta.env.PUBLIC_EMAIL_USER,
-      to: import.meta.env.PUBLIC_ADMIN_EMAIL,
+      from: import.meta.env.EMAIL_USER,
+      to: import.meta.env.ADMIN_EMAIL,
       subject: "New Contact Form Submission",
       html: `
         <h3>New Contact Request</h3>
@@ -36,8 +37,9 @@ export const POST: APIRoute = async ({ request }) => {
       `,
     });
 
+    // Auto reply to user
     await transporter.sendMail({
-      from: import.meta.env.PUBLIC_EMAIL_USER,
+      from: import.meta.env.EMAIL_USER,
       to: email,
       subject: "Thank you for contacting us",
       html: `
@@ -53,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
 
   } catch (error) {
-    console.error("FULL ERROR:", error);
+    console.error("Error:", error);
 
     return new Response(
       JSON.stringify({ message: "Server error while sending email" }),
