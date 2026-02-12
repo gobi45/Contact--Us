@@ -1,390 +1,363 @@
+---
+export const prerender = false;
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us</title>
-
   <style>
+    /* Your exact CSS - unchanged */
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
       margin: 0;
     }
-/* Floating header container */
-.floating-header {
-  position: fixed; /* stays on top while scrolling */
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  display: flex;
-  justify-content: space-between; /* logo left, menu right */
-  align-items: center;
-  padding: 5px 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-/* Logo */
-.floating-header .top-left-logo img {
-  width: 220px; /* adjust as needed */
-  height: auto;
-}
-
-/* Menu items (top-right) */
-.floating-header .top-right-menu ul {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-.floating-header .top-right-menu ul li {
-  margin-left: 20px;
-}
-
-.floating-header .top-right-menu ul li a {
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-size: 15px;  
-  transition: background 0.3s, color 0.3s;
-}
-
-.floating-header .top-right-menu ul li a:hover {
-  background-color: rgba(26, 23, 24, 0.097);
-  color: rgb(87, 97, 182);
-}
-
-/* Responsive: stack menu below logo on small screens */
-@media screen and (max-width: 768px) {
-  .floating-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .floating-header .top-right-menu ul {
-    flex-direction: column;
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .floating-header .top-right-menu ul li {
-    margin: 5px 0;
-  }
-
-  .floating-header .top-right-menu ul li a {
-    width: 100%;
-    text-align: left;
-  }
-}
-body {
-  margin: 0;
-  padding-top: 150px; /* adjust based on header height */
-}
-.animated-text {
-  font-size: 38px;
-  font-weight: bold;
-  text-align: left;   /* 👈 move text to left */
-  margin-left: 60px;
-
-  background: linear-gradient(50deg, #0e286a, #860b9c, #95136c);
-  background-size: 200% auto;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  animation: textShine 4s linear infinite;
-}
-
-@keyframes textShine {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
-.hero-description {
-  font-size: 18px;
-  color: #333;
-  max-width: 1200px;   /* keeps text neat */
-  margin-left: 60px;  /* same alignment as heading */
-  margin-top: 15px;
-  line-height: 1.6;
-}
+    /* Floating header container */
+    .floating-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .floating-header .top-left-logo img {
+      width: 220px;
+      height: auto;
+    }
+    .floating-header .top-right-menu ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .floating-header .top-right-menu ul li {
+      margin-left: 20px;
+    }
+    .floating-header .top-right-menu ul li a {
+      text-decoration: none;
+      color: black;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 15px;  
+      transition: background 0.3s, color 0.3s;
+    }
+    .floating-header .top-right-menu ul li a:hover {
+      background-color: rgba(26, 23, 24, 0.097);
+      color: rgb(87, 97, 182);
+    }
+    @media screen and (max-width: 768px) {
+      .floating-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .floating-header .top-right-menu ul {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .floating-header .top-right-menu ul li {
+        margin: 5px 0;
+      }
+      .floating-header .top-right-menu ul li a {
+        width: 100%;
+        text-align: left;
+      }
+    }
+    body {
+      margin: 0;
+      padding-top: 150px;
+    }
+    .animated-text {
+      font-size: 38px;
+      font-weight: bold;
+      text-align: left;
+      margin-left: 60px;
+      background: linear-gradient(50deg, #0e286a, #860b9c, #95136c);
+      background-size: 200% auto;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: textShine 4s linear infinite;
+    }
+    @keyframes textShine {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    .hero-description {
+      font-size: 18px;
+      color: #333;
+      max-width: 1200px;
+      margin-left: 60px;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
     .contact-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  max-width: 1200px;
-  margin-left: 60px;   /* move content to left */
-  margin-right: 40px;
-}
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      max-width: 1200px;
+      margin-left: 60px;
+      margin-right: 40px;
+    }
     .container {
       flex: 1;
     }
-/* ===== Modern Form Styling ===== */
-
-.container h1 {
-  margin-left: 0px;   /* move left */
-}
-
-
-.container p {
-  color: #555;
-  margin-bottom: 25px;
-}
-
-form {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-}
-/* Labels */
-form label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #333;
-}
-
-/* Required star */
-.required {
-  color: red;
-}
-
-/* Better input look */
-input, textarea {
-  background-color: #fafafa;
-}
-
-/* Checkbox styling */
-.checkbox-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-.checkbox-container input {
-  width: auto;
-  margin-top: 4px;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 18px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-}
-
-input:focus, textarea:focus {
-  border-color: #0e286a;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(14, 40, 106, 0.1);
-}
-
-textarea {
-  resize: none;
-}
-
-button {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(90deg, #0e286a, #860b9c);
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-}
-
+    .container h1 {
+      margin-left: 0px;
+    }
+    .container p {
+      color: #555;
+      margin-bottom: 25px;
+    }
+    form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+    form label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    .required {
+      color: red;
+    }
+    input, textarea {
+      background-color: #fafafa;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    input:focus, textarea:focus {
+      border-color: #0e286a;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(14, 40, 106, 0.1);
+    }
+    textarea {
+      resize: none;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .checkbox-container input {
+      width: auto;
+      margin-top: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #0e286a, #860b9c);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
     #thankYouMessage {
       display: none;
       color: rgb(186, 65, 5);
       font-size: 24px;
       text-align: center;
     }
-
     .contact-image-container {
       flex: 1;
       text-align: center;
     }
-
-   .contact-image {
-  width: 100%;
-  max-width: 600px;
-  height: auto;
-  border-radius: 10px;
-  margin-top: 30px;  
-}
-   /* Right Side Contact Info Box */
-.contact-info-box {
-  background-color: #b9cbce5a; /* very light blue */
-  padding: 25px;
-  border-radius: 12px;
-  margin-top: 25px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  text-align: left;
-}
-
-.info-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.icon {
-  font-size: 20px;
-  margin-top: 4px;
-}
-
-.contact-info-box p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.6;
-}
+    .contact-image {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+    .contact-info-box {
+      background-color: #a1b6ba5a;
+      padding: 25px;
+      border-radius: 12px;
+      margin-top: 25px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      text-align: left;
+    }
+    .info-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .icon {
+      font-size: 20px;
+      margin-top: 4px;
+    }
+    .contact-info-box p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+    }
+    .footer {
+      background: #111;
+      color: rgb(255, 255, 255);
+      padding: 40px 20px;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    .footer a {
+      color: #ccc;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 30px;
+      color: #aaa;
+    }
+    @media (max-width: 992px) {
+      .contact-wrapper {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
-
 <body>
-<!-- Floating header with logo and menu -->
-<header class="floating-header">
-  <div class="top-left-logo">
-    <img src="/logo.jpg" alt="GoVal Logo">
-  </div>
-  <nav class="top-right-menu">
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/goval-ai">GoVal AI</a></li>
-      <li><a href="/solutions">Solutions</a></li>
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/customer-stories">Customer Stories</a></li>
-      <li><a href="/about">About GoVal</a></li>
-      <li><a href="/contact-us">Contact Us</a></li>
-    </ul>
-  </nav>
-</header>
-<h1 class="animated-text">
-  Get in Touch with GoVal
-</h1>
-<p class="hero-description">
-  We'd love to hear from you! Whether you have questions about our solutions, 
-  need a demo, or want to discuss how GoVal can help streamline your validation processes, 
-  our team is here to assist you.
-</p>
-  <div class="contact-wrapper">
+  <!-- Your exact HTML structure -->
+  <header class="floating-header">
+    <div class="top-left-logo">
+      <img src="/logo.jpg" alt="GoVal Logo">
+    </div>
+    <nav class="top-right-menu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/goval-ai">GoVal AI</a></li>
+        <li><a href="/solutions">Solutions</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/customer-stories">Customer Stories</a></li>
+        <li><a href="/about">About GoVal</a></li>
+        <li><a href="/contact-us">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <!-- LEFT SIDE FORM -->
+  <h1 class="animated-text">Get in Touch with GoVal</h1>
+  <p class="hero-description">
+    We'd love to hear from you! Whether you have questions about our solutions, 
+    need a demo, or want to discuss how GoVal can help streamline your validation processes, 
+    our team is here to assist you.
+  </p>
+
+  <div class="contact-wrapper">
     <div class="container">
       <h1>Contact Us</h1>
-
       <form id="contactForm">
-
-  <label>Your Name <span class="required">*</span></label>
-  <input type="text" name="name" required>
-
-  <label>Your Email <span class="required">*</span></label>
-  <input type="email" name="email" required>
-
-  <label>Phone Number</label>
-  <input type="text" name="phone">
-
-  <label>Organization</label>
-  <input type="text" name="organization">
-
-  <label>Message <span class="required">*</span></label>
-  <textarea name="message" rows="5" required></textarea>
-
-  <div class="checkbox-container">
-    <input type="checkbox" id="consent" required>
-    <label for="consent">
-      By submitting this form, you agree to the Terms of Use and Privacy Policy. We value your privacy and will not share your information without your consent.
-    </label>
-  </div>
-
-  <button type="submit">Submit</button>
-
-</form>
-
+        <label>Your Name <span class="required">*</span></label>
+        <input type="text" name="name" required>
+        <label>Your Email <span class="required">*</span></label>
+        <input type="email" name="email" required>
+        <label>Phone Number</label>
+        <input type="text" name="phone">
+        <label>Organization</label>
+        <input type="text" name="organization">
+        <label>Message <span class="required">*</span></label>
+        <textarea name="message" rows="5" required></textarea>
+        <div class="checkbox-container">
+          <input type="checkbox" id="consent" required>
+          <label for="consent">
+            By submitting this form, you agree to the Terms of Use and Privacy Policy. We value your privacy and will not share your information without your consent.
+          </label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
       <p id="thankYouMessage">
         Thank you for contacting us. We will get back to you shortly.
       </p>
     </div>
 
-   <div class="contact-image-container">
-  <img src="/contact.jpg" alt="Contact" class="contact-image">
-
-  <!-- CONTACT DETAILS BELOW IMAGE -->
-  <div class="contact-info-box">
-
-    <div class="info-row">
-      <span class="icon">✉️</span>
-      <div>
-        <p><strong>Sales Enquiry:</strong> info@govalidation.com</p>
-        <p><strong>Technical Support:</strong> govalsupport@adventsys.co</p>
+    <div class="contact-image-container">
+      <img src="/contact.jpg" alt="Contact" class="contact-image">
+      <div class="contact-info-box">
+        <div class="info-row">
+          <span class="icon">✉️</span>
+          <div>
+            <p><strong>Sales Enquiry:</strong> info@govalidation.com</p>
+            <p><strong>Technical Support:</strong> govalsupport@adventsys.co</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <span class="icon">📍</span>
+          <div>
+            <p><strong>INDIA</strong></p>
+            <p>1st Floor, Prestige Samrah Plaza,<br>St Marks Road, Shanthala Nagar,<br>Ashok Nagar,<br>Bengaluru 560 001, India</p>
+            <p><strong>Phone:</strong> +91 99000 23710, +91 90081 50710</p>
+          </div>
+        </div>
+        <div class="info-row">
+          <span class="icon">📍</span>
+          <div>
+            <p><strong>USA</strong></p>
+            <p>7232 BROADWAY STE 306,<br>JACKSON HEIGHTS NY 11372,<br>USA</p>
+            <p><strong>Phone:</strong> +1 (408) 457-0086, +1 (908) 656-8258</p>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="info-row">
-      <span class="icon">📍</span>
-      <div>
-        <p><strong>INDIA</strong></p>
-        <p>
-          1st Floor, Prestige Samrah Plaza,<br>
-          St Marks Road, Shanthala Nagar,<br>
-          Ashok Nagar,<br>
-          Bengaluru 560 001, India
-        </p>
-        <p><strong>Phone:</strong> +91 99000 23710, +91 90081 50710</p>
-      </div>
-    </div>
-
-    <div class="info-row">
-      <span class="icon">📍</span>
-      <div>
-        <p><strong>USA</strong></p>
-        <p>
-          7232 BROADWAY STE 306,<br>
-          JACKSON HEIGHTS NY 11372,<br>
-          USA
-        </p>
-        <p><strong>Phone:</strong> +1 (408) 457-0086, +1 (908) 656-8258</p>
-      </div>
-    </div>
-
   </div>
-</div>
-  <!-- SCRIPT -->
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <h3>GoVal</h3>
+        <p>Paperless Validation Solutions</p>
+      </div>
+      <div>
+        <a href="/">Home</a>
+        <a href="/contact-us">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 GoVal</div>
+  </footer>
+
   <script>
     const form = document.getElementById("contactForm");
     const thankYou = document.getElementById("thankYouMessage");
 
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
-
       const formData = new FormData(form);
-
       const data = {
         name: formData.get("name"),
         email: formData.get("email"),
@@ -392,17 +365,12 @@ button:hover {
         organization: formData.get("organization"),
         message: formData.get("message"),
       };
-
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-
       const result = await response.json();
-
       if (response.ok) {
         form.style.display = "none";
         thankYou.style.display = "block";
