@@ -22,7 +22,6 @@ export const POST: APIRoute = async ({ request }) => {
         pass: import.meta.env.PUBLIC_EMAIL_PASS,
       },
     });
-
     await transporter.sendMail({
       from: import.meta.env.PUBLIC_EMAIL_USER,
       to: import.meta.env.PUBLIC_ADMIN_EMAIL,
