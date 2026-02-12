@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.17.1"
+    "@astrojs/node": "^9.5.3",
+    "astro": "^5.17.1",
+    "nodemailer": "^8.0.1"
   }
 }
