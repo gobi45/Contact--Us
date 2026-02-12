@@ -66,6 +66,34 @@ export const prerender = false;
       background-color: rgba(26, 23, 24, 0.097);
       color: rgb(87, 97, 182);
     }
+    .contact-btn {
+  background: linear-gradient(90deg, #4a84e8, #3b6fd8);
+  color: white !important;
+  padding: 10px 22px !important;
+  border-radius: 25px !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: linear-gradient(90deg, #3b6fd8, #2f5ec2);
+  color: white !important;
+  transform: translateY(-2px);
+}
+.contact-btn {
+  background: linear-gradient(90deg, #4a84e8, #3b6fd8);
+  color: white !important;
+  padding: 10px 22px !important;
+  border-radius: 25px !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: linear-gradient(90deg, #3b6fd8, #2f5ec2);
+  color: white !important;
+  transform: translateY(-2px);
+}
 
     /* 3-LINE HAMBURGER */
     .hamburger-btn {
@@ -218,11 +246,10 @@ export const prerender = false;
       width: auto;
       margin-top: 4px;
     }
-    .submit-btn {
-      width: 100%;
-      background: linear-gradient(90deg, #0e286a, #860b9c);
+   .submit-btn {
+      background: #ff5a2c;
       color: white;
-      padding: 14px;
+      padding: 10px 70px;
       border: none;
       border-radius: 8px;
       font-size: 16px;
@@ -271,41 +298,143 @@ export const prerender = false;
       color: #000;
     }
 
-    /* ================= FOOTER ================= */
-    .footer {
-      background: #373a77;
-      color: white;
-      padding: 40px 40px 20px;
-      margin-top: 60px;
-    }
-    .footer-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 40px;
-    }
-    .footer h3 {
-      margin-bottom: 10px;
-    }
-    .footer-links {
-      display: flex;
-      gap: 60px;
-    }
-    .footer-links div a {
-      display: block;
-      color: #ccc;
-      text-decoration: none;
-      margin-bottom: 8px;
-    }
-    .footer-bottom {
-      text-align: center;
-      margin-top: 30px;
-      color: #f1eded;
-      font-size: 14px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+   /* ================= FOOTER ================= */
+
+.footer {
+  background: #3d5a80; /* closer to your screenshot */
+  color: #fff;
+  padding: 70px 80px 30px;
+  font-family: Arial, sans-serif;
+}
+
+/* ===== TOP SECTION ===== */
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* LEFT SECTION */
+
+.footer-left-section {
+  width: 320px;
+}
+
+.footer-logo {
+  width: 50px;
+  margin-bottom: 20px;
+}
+
+.footer-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.follow-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* SOCIAL */
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-social a {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.footer-social a:hover {
+  background: white;
+  color: #3d5a80;
+}
+
+/* CENTER LINKS */
+
+.footer-links {
+  display: flex;
+  gap: 90px;
+  margin-top: 10px;
+}
+
+.footer-column a {
+  display: block;
+  margin-bottom: 14px;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.footer-column a:hover {
+  text-decoration: underline;
+}
+
+/* RIGHT ISO */
+
+.footer-iso {
+  display: flex;
+  flex-direction: row; 
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.footer-iso img {
+  width: 60px;
+  height: auto;
+}
+/* ===== BOTTOM BAR ===== */
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 50px;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.footer-bottom-left a {
+  margin-right: 25px;
+  color: white;
+  text-decoration: none;
+}
+
+.footer-bottom-left a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom-right {
+  color: #e0e0e0;
+}
+
+
+/* RESPONSIVE */
+@media(max-width: 992px) {
+  .footer-container {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+  }
+  .footer-links { justify-content: center; gap: 30px; }
+  .footer-social { justify-content: center; }
+}
 
     /* ================= RESPONSIVE ================= */
     @media(max-width: 992px) {
@@ -332,15 +461,15 @@ export const prerender = false;
     </div>
     
     <!-- DESKTOP MENU -->
-    <nav class="top-right-menu">
+   <nav class="top-right-menu">
       <ul>
-        <li><a href="/">Home</a></li>
+        <li><a href="/home">Home</a></li>
         <li><a href="/goval-ai">GoVal AI</a></li>
         <li><a href="/solutions">Solutions</a></li>
         <li><a href="/blog">Blog</a></li>
         <li><a href="/customer-stories">Customer Stories</a></li>
         <li><a href="/about">About GoVal</a></li>
-        <li><a href="/contact-us">Contact Us</a></li>
+        <li><a href="/" class="contact-btn">Contact Us</a></li>
       </ul>
     </nav>
 
@@ -449,27 +578,66 @@ export const prerender = false;
 
   <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer-container">
-      <div>
-        <h3>GoVal</h3>
-        <p>Paperless Validation Solutions</p>
-      </div>
-      <div class="footer-links">
-        <div>
-          <a href="/">Home</a>
-          <a href="/goval-ai">GoVal AI</a>
-          <a href="/solutions">Solutions</a>
-          <a href="/about">About GoVal</a>
-        </div>
-        <div>
-          <a href="/blog">Blog</a>
-          <a href="/customer-stories">Customer Stories</a>
-          <a href="/contact-us">Contact Us</a>
-        </div>
+
+  <!-- TOP SECTION -->
+  <div class="footer-container">
+
+    <!-- LEFT SIDE -->
+    <div class="footer-left-section">
+      <img src="logo.jpg" alt="GoVal Logo" class="footer-logo">
+
+      <p class="footer-desc">
+        GoVal: Paperless Validation solutions for Life Science Industries.
+      </p>
+
+      <h4 class="follow-title">Follow Us On</h4>
+
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/govalidation/" target="_blank">in</a>
+        <a href="https://vimeo.com/goval" target="_blank">vi</a>
+        <a href="https://www.youtube.com/@govalidation4585" target="_blank">yt</a>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 GoVal</div>
-  </footer>
+
+    <!-- CENTER LINKS -->
+    <div class="footer-links">
+      <div class="footer-column">
+        <a href="#">Home</a>
+        <a href="#">GoVal AI</a>
+        <a href="#">Solutions</a>
+        <a href="#">About GoVal</a>
+      </div>
+
+      <div class="footer-column">
+        <a href="#">Blogs</a>
+        <a href="#">Customer Stories</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+
+    <!-- RIGHT ISO BADGES -->
+    <div class="footer-iso">
+      <img src="iso-1.jpg" alt="ISO Certification">
+      <img src="iso-2.jpg" alt="ISO Certification">
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Sitemap</a>
+      <a href="#">Cookie Notice</a>
+    </div>
+
+    <div class="footer-bottom-right">
+      © 2026 GoVal
+    </div>
+  </div>
+
+</footer>
 
   <!-- JAVASCRIPT -->
   <script>
