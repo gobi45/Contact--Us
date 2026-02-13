@@ -246,6 +246,18 @@ export const prerender = false;
       width: auto;
       margin-top: 4px;
     }
+input[type="checkbox"]:checked + .checkmark {
+  background: #0e286a;
+  border-color: #0e286a;
+}
+input[type="checkbox"]:checked + .checkmark::after {
+  content: "✓";
+  color: white;
+  font-size: 12px;
+  position: absolute;
+  margin-left: 2px;
+  margin-top: -2px;
+}
    .submit-btn {
       background: #ff5a2c;
       color: white;
@@ -591,6 +603,14 @@ export const prerender = false;
               By submitting this form, you agree to the Terms of Use and Privacy Policy. 
               We value your privacy and will not share your information without your consent.
             </label>
+        <!-- ADD THIS right before the submit button -->
+<div class="form-group">
+  <label class="checkbox-container">
+    <input type="checkbox" id="robotCheck" required>
+    <span class="checkmark"></span>
+    I'm not a robot
+  </label>
+</div>
           </div>
           <button type="submit" class="submit-btn">Submit</button>
         </form>
@@ -713,57 +733,60 @@ export const prerender = false;
       });
     });
 
-    const form = document.getElementById('contactForm');
-  const thankYou = document.getElementById('thankYouMessage');
+   const form = document.getElementById('contactForm');
+const thankYou = document.getElementById('thankYouMessage');
 
-  // Helper function to show alerts
-  const showAlert = (message) => {
-    alert(message);
-  };
+// Helper function to show alerts
+const showAlert = (message) => {
+  alert(message);
+};
+// REPLACE the entire form.addEventListener section with this:
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // BUSINESS EMAIL VALIDATION
+  const email = form.email.value.trim();
+  const businessDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const emailDomain = email.split('@')[1]?.toLowerCase();
+  
+  if (businessDomains.includes(emailDomain)) {
+    alert('Please use a business email address (e.g., @company.com)');
+    return;
+  }
 
-    // Get form values
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const phone = form.phone.value.trim();
-    const organization = form.organization.value.trim();
-    const message = form.message.value.trim();
-    const consent = form.querySelector('#consent').checked;
+  // ROBOT CHECK
+  const robotCheck = form.querySelector('#robotCheck').checked;
+  if (!robotCheck) {
+    alert('Please confirm you are not a robot');
+    return;
+  }
 
-    // VALIDATION
-    if (!name) {
-      showAlert('Name is required');
-      return;
-    }
+  // EXISTING VALIDATION (keep all)
+  const name = form.name.value.trim();
+  const consent = form.querySelector('#consent').checked;
 
-    if (!consent) {
-      showAlert('You must agree to the terms');
-      return;
-    }
+  if (!name || !consent) {
+    alert('Please fill all required fields');
+    return;
+  }
 
-    // SHOW THANK-YOU IMMEDIATELY
-    form.style.display = 'none';
-    thankYou.style.display = 'block';
+  // SHOW THANK-YOU & SEND
+  form.style.display = 'none';
+  thankYou.style.display = 'block';
 
-    // PREPARE DATA
-    const data = { name, email, phone, organization, message };
+  const phone = form.phone.value.trim();
+  const organization = form.organization.value.trim();
+  const message = form.message.value.trim();
 
-    // SEND FORM IN BACKGROUND
-    fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
-    .then(res => res.json())
-    .then(result => {
-      console.log('Form submitted successfully:', result);
-    })
-    .catch(err => {
-      console.error('Form submission error:', err);
-    });
-  });
+  const data = { name, email, phone, organization, message };
+
+  fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+  .catch(err => console.error('Error:', err));
+});
   </script>
 </body>
 </html>
