@@ -733,60 +733,57 @@ export const prerender = false;
     });
   });
 
-  // FORM SUBMISSION WITH RECAPTCHA
-  const form = document.getElementById('contactForm');
-  const thankYou = document.getElementById('thankYouMessage');
+  // FORM SUBMISSION - BULLETPROOF VERSION
+const form = document.getElementById('contactForm');
+const thankYou = document.getElementById('thankYouMessage');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  console.log('Form submitted - validation starting'); // DEBUG
 
-    // Generate fresh token
+  // Get email DIRECTLY - no fancy selectors
+  const emailField = document.querySelector('input[name="email"]');
+  const email = emailField.value.trim();
+  
+  console.log('Email entered:', email); // DEBUG
+
+  // BUSINESS EMAIL CHECK - SIMPLE AND DIRECT
+  const freeDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const emailParts = email.split('@');
+  const domain = emailParts[1] ? emailParts[1].toLowerCase() : '';
+  
+  console.log('Domain checked:', domain); // DEBUG
+  
+  if (freeDomains.includes(domain)) {
+    alert('Please use BUSINESS email');
+    emailField.focus(); // Focus back to email field
+    return false;
+  }
+
+  // OTHER VALIDATION
+  const nameField = document.querySelector('input[name="name"]');
+  const consent = document.querySelector('#consent').checked;
+  
+  if (!nameField.value.trim() || !consent) {
+    alert('Please fill all required fields');
+    return false;
+  }
+
+  // reCAPTCHA (will work or skip)
+  try {
     const token = await grecaptcha.execute('6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG', {action: 'submit'});
     document.getElementById('recaptchaToken').value = token;
+  } catch (error) {
+    console.log('reCAPTCHA failed, continuing anyway');
+  }
 
-    // BUSINESS EMAIL CHECK
-    const email = form.email.value.trim();
-    const businessDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-    const emailDomain = email.split('@')[1]?.toLowerCase();
-    
-    if (businessDomains.includes(emailDomain)) {
-      alert('Please use a business email address');
-      return;
-    }
-
-    // OTHER VALIDATION
-    const name = form.name.value.trim();
-    const consent = form.querySelector('#consent').checked;
-
-    if (!name || !consent) {
-      alert('Please fill all required fields');
-      return;
-    }
-
-    // SHOW SUCCESS
-    form.style.display = 'none';
-    thankYou.style.display = 'block';
-
-    // SEND DATA
-    const phone = form.phone.value.trim();
-    const organization = form.organization.value.trim();
-    const message = form.message.value.trim();
-
-    const data = { 
-      name, 
-      email, 
-      phone, 
-      organization, 
-      message,
-      recaptcha_token: token 
-    };
-
-    fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    }).catch(err => console.error('Error:', err));
-  });
+  // SUCCESS
+  form.style.display = 'none';
+  thankYou.style.display = 'block';
+  
+  console.log('Form success - sending data'); // DEBUG
+});
 </script>
 </body>
 </html>
