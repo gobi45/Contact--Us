@@ -749,7 +749,7 @@ form.addEventListener('submit', async (e) => {
   console.log('Email entered:', email); // DEBUG
 
   // BUSINESS EMAIL CHECK - SIMPLE AND DIRECT
-  const freeDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const freeDomains = ['yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
   const emailParts = email.split('@');
   const domain = emailParts[1] ? emailParts[1].toLowerCase() : '';
   
