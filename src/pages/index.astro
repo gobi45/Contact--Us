@@ -713,36 +713,57 @@ export const prerender = false;
       });
     });
 
-    // FORM SUBMISSION
     const form = document.getElementById('contactForm');
-    const thankYou = document.getElementById('thankYouMessage');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        organization: formData.get('organization'),
-        message: formData.get('message'),
-      };
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        if (response.ok) {
-          form.style.display = 'none';
-          thankYou.style.display = 'block';
-        } else {
-          alert(result.message || 'Submission failed');
-        }
-      } catch (error) {
-        alert('Network error. Please try again.');
-      }
+  const thankYou = document.getElementById('thankYouMessage');
+
+  // Helper function to show alerts
+  const showAlert = (message) => {
+    alert(message);
+  };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Get form values
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const phone = form.phone.value.trim();
+    const organization = form.organization.value.trim();
+    const message = form.message.value.trim();
+    const consent = form.querySelector('#consent').checked;
+
+    // VALIDATION
+    if (!name) {
+      showAlert('Name is required');
+      return;
+    }
+
+    if (!consent) {
+      showAlert('You must agree to the terms');
+      return;
+    }
+
+    // SHOW THANK-YOU IMMEDIATELY
+    form.style.display = 'none';
+    thankYou.style.display = 'block';
+
+    // PREPARE DATA
+    const data = { name, email, phone, organization, message };
+
+    // SEND FORM IN BACKGROUND
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    .then(res => res.json())
+    .then(result => {
+      console.log('Form submitted successfully:', result);
+    })
+    .catch(err => {
+      console.error('Form submission error:', err);
     });
+  });
   </script>
 </body>
 </html>
