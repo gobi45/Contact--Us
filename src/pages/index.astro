@@ -756,7 +756,7 @@ form.addEventListener('submit', async (e) => {
   console.log('Domain checked:', domain); // DEBUG
   
   if (freeDomains.includes(domain)) {
-    alert('Please use BUSINESS email');
+    alert('Please use BUSINESS email id');
     emailField.focus(); // Focus back to email field
     return false;
   }
@@ -777,8 +777,7 @@ form.addEventListener('submit', async (e) => {
   } catch (error) {
     console.log('reCAPTCHA failed, continuing anyway');
   }
-
-  // SUCCESS
+  // SUCCESS 
   form.style.display = 'none';
   thankYou.style.display = 'block';
   
