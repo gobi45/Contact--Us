@@ -7,6 +7,7 @@ export const prerender = false;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <title>Contact - GoVal</title>
   <style>
     * {
@@ -246,18 +247,6 @@ export const prerender = false;
       width: auto;
       margin-top: 4px;
     }
-input[type="checkbox"]:checked + .checkmark {
-  background: #0e286a;
-  border-color: #0e286a;
-}
-input[type="checkbox"]:checked + .checkmark::after {
-  content: "✓";
-  color: white;
-  font-size: 12px;
-  position: absolute;
-  margin-left: 2px;
-  margin-top: -2px;
-}
    .submit-btn {
       background: #ff5a2c;
       color: white;
@@ -603,14 +592,8 @@ input[type="checkbox"]:checked + .checkmark::after {
               By submitting this form, you agree to the Terms of Use and Privacy Policy. 
               We value your privacy and will not share your information without your consent.
             </label>
-        <!-- ADD THIS right before the submit button -->
-<div class="form-group">
-  <label class="checkbox-container">
-    <input type="checkbox" id="robotCheck" required>
-    <span class="checkmark"></span>
-    I'm not a robot
-  </label>
-</div>
+      </div>
+<div class="g-recaptcha" data-sitekey="6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG"></div>
           </div>
           <button type="submit" class="submit-btn">Submit</button>
         </form>
@@ -714,79 +697,59 @@ input[type="checkbox"]:checked + .checkmark::after {
 
 </footer>
 
-  <!-- JAVASCRIPT -->
-  <script>
-    // HAMBURGER MENU
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
+<script>
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuClose = document.getElementById('mobileMenuClose');
 
-    hamburgerBtn.addEventListener('click', () => {
-      mobileMenu.classList.add('active');
-    });
-    mobileMenuClose.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-    });
-    document.querySelectorAll('.mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-      });
-    });
+if (hamburgerBtn) hamburgerBtn.addEventListener('click', () => mobileMenu.classList.add('active'));
+if (mobileMenuClose) mobileMenuClose.addEventListener('click', () => mobileMenu.classList.remove('active'));
+document.querySelectorAll('.mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.remove('active')));
 
-   const form = document.getElementById('contactForm');
+const form = document.getElementById('contactForm');
 const thankYou = document.getElementById('thankYouMessage');
 
-// Helper function to show alerts
-const showAlert = (message) => {
-  alert(message);
-};
-// REPLACE the entire form.addEventListener section with this:
-form.addEventListener('submit', (e) => {
+function showAlert(message) { alert(message); }
+function isBusinessEmail(email) {
+  const blockedDomains = ["gmail.com","yahoo.com","hotmail.com","outlook.com","aol.com","icloud.com","mail.com","protonmail.com"];
+  const domain = email.split("@")[1]?.toLowerCase();
+  return domain && !blockedDomains.includes(domain);
+}
+
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  // BUSINESS EMAIL VALIDATION
-  const email = form.email.value.trim();
-  const businessDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-  const emailDomain = email.split('@')[1]?.toLowerCase();
   
-  if (businessDomains.includes(emailDomain)) {
-    alert('Please use a business email address (e.g., @company.com)');
-    return;
-  }
-
-  // ROBOT CHECK
-  const robotCheck = form.querySelector('#robotCheck').checked;
-  if (!robotCheck) {
-    alert('Please confirm you are not a robot');
-    return;
-  }
-
-  // EXISTING VALIDATION (keep all)
   const name = form.name.value.trim();
-  const consent = form.querySelector('#consent').checked;
-
-  if (!name || !consent) {
-    alert('Please fill all required fields');
-    return;
-  }
-
-  // SHOW THANK-YOU & SEND
-  form.style.display = 'none';
-  thankYou.style.display = 'block';
-
+  const email = form.email.value.trim();
   const phone = form.phone.value.trim();
   const organization = form.organization.value.trim();
   const message = form.message.value.trim();
+  const consent = form.querySelector('#consent').checked;
+  const recaptchaResponse = grecaptcha.getResponse();
 
-  const data = { name, email, phone, organization, message };
+  if (!name) { showAlert('Name is required'); return; }
+  if (!email || !isBusinessEmail(email)) { showAlert('Please use a business email'); return; }
+  if (!message) { showAlert('Message is required'); return; }
+  if (!consent) { showAlert('You must agree to the terms'); return; }
+  if (!recaptchaResponse) { showAlert('Please complete reCAPTCHA'); return; }
 
-  fetch('/api/contact', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  .catch(err => console.error('Error:', err));
+  form.style.display = 'none';
+  thankYou.style.display = 'block';
+
+  const data = { name, email, phone, organization, message, recaptchaResponse };
+  
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    console.log(result);
+  } catch(err) {
+    console.error('Error:', err);
+  }
 });
-  </script>
+</script>
 </body>
 </html>
