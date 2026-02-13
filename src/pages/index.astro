@@ -706,15 +706,16 @@ export const prerender = false;
 
 <script>
   // reCAPTCHA v3
-  let recaptchaToken = '';
+// reCAPTCHA v3
+let recaptchaToken = '';
 
-  // Load reCAPTCHA token on page load
-  grecaptcha.ready(function() {
-    grecaptcha.execute('6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG', {action: 'contact'}).then(function(token) {
-      recaptchaToken = token;
-      document.getElementById('recaptchaToken').value = token;
-    });
+grecaptcha.ready(function() {
+  grecaptcha.execute('6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG', {action: 'contact'}).then(function(token) {
+    recaptchaToken = token;
+    document.getElementById('recaptchaToken').value = token;
   });
+});
+
 
   // Clean hamburger menu functionality
   const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -736,57 +737,55 @@ export const prerender = false;
   // SINGLE CLEAN FORM HANDLER - NO DUPLICATES
   const form = document.getElementById('contactForm');
   const thankYou = document.getElementById('thankYouMessage');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(form);
-    const name = formData.get('name')?.toString().trim();
-    const email = formData.get('email')?.toString().trim();
-    
-    // Business email validation
-    const freeDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-    const emailDomain = email.split('@')[1]?.toLowerCase();
-    
-    if (freeDomains.includes(emailDomain)) {
-      alert('Please use a business email address');
-      return;
-    }
+  const formData = new FormData(form);
 
-    // Basic validation
-    if (!name || !form.querySelector('#consent').checked) {
-      alert('Please fill all required fields and accept terms');
-      return;
-    }
+  const name = formData.get('name')?.toString().trim();
+  const email = formData.get('email')?.toString().trim();
 
-    // Get fresh reCAPTCHA token
-    try {
-      const token = await grecaptcha.execute('6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG', {action: 'submit'});
-      document.getElementById('recaptchaToken').value = token;
-    } catch (error) {
-      console.log('reCAPTCHA failed:', error);
-    }
+  const freeDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const emailDomain = email.split('@')[1]?.toLowerCase();
 
-    // Show success immediately
-    form.style.display = 'none';
-    thankYou.style.display = 'block';
+  if (freeDomains.includes(emailDomain)) {
+    alert('Please use a business email address');
+    return;
+  }
 
-    // Send data to backend
-    const submitData = Object.fromEntries(formData);
-    
-    fetch('/api/contact', {
+  if (!name || !form.querySelector('#consent').checked) {
+    alert('Please fill all required fields and accept terms');
+    return;
+  }
+
+  // ✅ Check if captcha completed
+  const captchaResponse = grecaptcha.getResponse();
+  if (!captchaResponse) {
+    alert("Please complete the reCAPTCHA");
+    return;
+  }
+
+  formData.append("recaptcha_token", captchaResponse);
+
+  try {
+    const response = await fetch('/api/contact', {
       method: 'POST',
+      body: JSON.stringify(Object.fromEntries(formData)),
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(submitData),
-    })
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
-    .catch(error => {
-      console.error('Error:', error);
-      // Still show success to user since form is hidden
     });
-  });
+
+    if (response.ok) {
+      form.style.display = 'none';
+      thankYou.style.display = 'block';
+    } else {
+      alert("Something went wrong");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Server error");
+  }
+});
 </script>
 </body>
 </html>

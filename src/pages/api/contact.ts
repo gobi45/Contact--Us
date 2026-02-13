@@ -13,7 +13,6 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400 }
       );
     }
-
     // Business email check (ONCE)
     const blockedDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com", "icloud.com"];
     const emailDomain = email.split('@')[1]?.toLowerCase();
@@ -36,16 +35,15 @@ export const POST: APIRoute = async ({ request }) => {
       const verifyData = await verify.json();
       recaptchaValid = verifyData.success;
     }
-
+console.log("EMAIL_USER:", import.meta.env.EMAIL_USER);
     // Create transporter with your Gmail SMTP
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: import.meta.env.EMAIL_USER, // ro452001@gmail.com
-        pass: import.meta.env.EMAIL_PASS, // rwrvzlqmlhulviwe
-      },
-    });
-
+    const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: import.meta.env.EMAIL_USER,
+    pass: import.meta.env.EMAIL_PASS,
+  },
+});
     // Email to ADMIN
     await transporter.sendMail({
       from: `"GoVal Contact" <${import.meta.env.EMAIL_USER}>`,
