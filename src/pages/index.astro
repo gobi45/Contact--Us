@@ -617,7 +617,7 @@ export const prerender = false;
             <span class="icon">✉️</span>
             <div>
               <p><strong>Sales Enquiry:</strong> info@govalidation.com</p>
-              <p><strong>Technical Support:</strong> govalsupport@adventsys.co</p>
+              <p><strong>Technical Support:</strong> govalsupport@adventsys.com</p>
             </div>
           </div>
           <div class="info-row">
@@ -736,53 +736,59 @@ export const prerender = false;
   // FORM SUBMISSION - BULLETPROOF VERSION
 const form = document.getElementById('contactForm');
 const thankYou = document.getElementById('thankYouMessage');
-
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  console.log('Form submitted - validation starting'); // DEBUG
-
-  // Get email DIRECTLY - no fancy selectors
+  // Validation (your existing code)
   const emailField = document.querySelector('input[name="email"]');
   const email = emailField.value.trim();
-  
-  console.log('Email entered:', email); // DEBUG
-
-  // BUSINESS EMAIL CHECK - SIMPLE AND DIRECT
-  const freeDomains = ['yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-  const emailParts = email.split('@');
-  const domain = emailParts[1] ? emailParts[1].toLowerCase() : '';
-  
-  console.log('Domain checked:', domain); // DEBUG
+  const freeDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  const domain = email.split('@')[1]?.toLowerCase() || '';
   
   if (freeDomains.includes(domain)) {
     alert('Please use BUSINESS email');
-    emailField.focus(); // Focus back to email field
-    return false;
+    return;
   }
-
-  // OTHER VALIDATION
-  const nameField = document.querySelector('input[name="name"]');
-  const consent = document.querySelector('#consent').checked;
   
-  if (!nameField.value.trim() || !consent) {
+  if (!document.querySelector('input[name="name"]').value.trim() || 
+      !document.querySelector('#consent').checked) {
     alert('Please fill all required fields');
-    return false;
+    return;
   }
 
-  // reCAPTCHA (will work or skip)
+  // Generate FRESH reCAPTCHA token
   try {
     const token = await grecaptcha.execute('6Lcj_mksAAAAALwXWy4eYZJl1VRoEXZ-YSZYRRBG', {action: 'submit'});
     document.getElementById('recaptchaToken').value = token;
   } catch (error) {
-    console.log('reCAPTCHA failed, continuing anyway');
+    console.log('reCAPTCHA failed:', error);
+    alert('reCAPTCHA verification failed');
+    return;
   }
 
-  // SUCCESS
-  form.style.display = 'none';
-  thankYou.style.display = 'block';
-  
-  console.log('Form success - sending data'); // DEBUG
+  // NOW ACTUALLY SEND TO API
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    
+    if (response.ok) {
+      form.style.display = 'none';
+      thankYou.style.display = 'block';
+    } else {
+      alert(result.message || 'Submission failed');
+    }
+  } catch (error) {
+    console.error('API Error:', error);
+    alert('Network error - please try again');
+  }
 });
 </script>
 </body>
