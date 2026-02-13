@@ -1,7 +1,3 @@
-export const prerender = false;
-import type { APIRoute } from "astro";
-import nodemailer from "nodemailer";
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.json();
@@ -11,74 +7,58 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ message: "Missing fields" }), { status: 400 });
     }
 
-    // ✅ VERIFY reCAPTCHA
-    const secretKey = import.meta.env.RECAPTCHA_SECRET_KEY;
-
-    const verify = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `secret=${secretKey}&response=${recaptchaResponse}`,
+    // VERIFY reCAPTCHA
+    const secretKey = import.meta.env.RECAPTCHA_SECRET_KEY || '';
+    const verify = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${secretKey}&response=${recaptchaResponse}` // FIXED
     });
-
     const verifyData = await verify.json();
 
     if (!verifyData.success) {
       return new Response(JSON.stringify({ message: "reCAPTCHA failed" }), { status: 400 });
     }
 
-    // ✅ BLOCK PERSONAL EMAILS
+    // BUSINESS EMAIL CHECK
     const blockedDomains = ["gmail.com","yahoo.com","hotmail.com","outlook.com","aol.com","icloud.com"];
-    const domain = email.split("@")[1]?.toLowerCase();
-
-    if (blockedDomains.includes(domain)) {
+    if (blockedDomains.includes(email.split('@')[1]?.toLowerCase() || '')) {
       return new Response(JSON.stringify({ message: "Business email required" }), { status: 400 });
     }
 
-    // ✅ SMTP CONFIG (IMPORTANT)
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
+    const transporter = nodemailer.createTransporter({
+      service: "gmail",
       auth: {
         user: import.meta.env.EMAIL_USER,
-        pass: import.meta.env.EMAIL_PASS, // MUST be App Password
+        pass: import.meta.env.EMAIL_PASS,
       },
     });
 
-    // ✅ SEND MAIL TO ADMIN
+    // ADMIN EMAIL - FIXED TEMPLATE LITERALS
     await transporter.sendMail({
-      from: `"Website Contact" <${import.meta.env.EMAIL_USER}>`,
+      from: import.meta.env.EMAIL_USER,
       to: import.meta.env.ADMIN_EMAIL,
-      subject: "New Contact Form Submission",
-      html: `
-        <h3>New Contact</h3>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Phone:</b> ${phone || "N/A"}</p>
-        <p><b>Organization:</b> ${organization || "N/A"}</p>
-        <p><b>Message:</b><br/> ${message}</p>
-      `,
+      subject: "New GoVal Contact Form",
+      html: `<h3>New Contact</h3>
+             <p><strong>Name:</strong> ${name}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+             <p><strong>Org:</strong> ${organization || 'N/A'}</p>
+             <p><strong>Message:</strong> ${message}</p>`
     });
 
-    // ✅ AUTO-REPLY TO USER
+    // USER EMAIL
     await transporter.sendMail({
-      from: `"GoVal Team" <${import.meta.env.EMAIL_USER}>`,
+      from: import.meta.env.EMAIL_USER,
       to: email,
-      subject: "Thank You for Contacting Us",
-      html: `
-        <p>Dear ${name},</p>
-        <p>Thank you for contacting us. Our team will respond shortly.</p>
-        <br/>
-        <p>Regards,<br/>GoVal Team</p>
-      `,
+      subject: "Thank You - GoVal",
+      html: `<h3>Dear ${name},</h3>
+             <p>Thank you for contacting us. We will respond soon.</p>`
     });
 
     return new Response(JSON.stringify({ message: "Success" }), { status: 200 });
-
   } catch (error) {
-    console.error("MAIL ERROR:", error);
+    console.error("ERROR:", error);
     return new Response(JSON.stringify({ message: "Server error" }), { status: 500 });
   }
 };
