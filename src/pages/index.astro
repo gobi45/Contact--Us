@@ -1,4 +1,5 @@
 ---
+import ChatWidget from './chat-widget.astro';
 export const prerender = false;
 ---
 
@@ -698,6 +699,7 @@ export const prerender = false;
     </div>
   </div>
 </footer>
+<ChatWidget client:load />
 <script>
   // ================= HAMBURGER MENU =================
   const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -829,5 +831,6 @@ export const prerender = false;
 
   });
 </script>
+<ChatWidget client:load />
 </body>
 </html>
